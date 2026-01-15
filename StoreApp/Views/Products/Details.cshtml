@@ -1,0 +1,46 @@
+﻿@model StoreApp.Models.Product
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="row mt-4">
+    <!-- IMAGE -->
+    <div class="col-md-6">
+        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+        {
+            <img src="@Model.ImageUrl"
+                 class="img-fluid rounded shadow-sm product-details-image"
+                 alt="@Model.Name" />
+        }
+        else
+        {
+            <img src="/images/no-image.png"
+                 class="img-fluid rounded shadow-sm product-details-image"
+                 alt="No image" />
+        }
+    </div>
+
+    <!-- INFO -->
+    <div class="col-md-6">
+        <h2 class="mb-3">@Model.Name</h2>
+
+        <h4 class="text-success mb-3">@Model.Price лв.</h4>
+
+        <p class="text-muted">
+            @Model.Description
+        </p>
+
+        <div class="mt-4">
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                ← Назад към продуктите
+            </a>
+
+            <a  asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-warning ms-2">
+                Редакция
+            </a>
+        </div>
+    </div>
+</div>

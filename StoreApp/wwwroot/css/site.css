@@ -36,3 +36,43 @@ body {
         padding: 10px;
         font-weight: 500;
     }
+
+/* PRODUCT CARDS */
+.product-card {
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .product-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+.product-image {
+    height: 150px;
+    object-fit: cover;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.clickable-card {
+    cursor: pointer;
+}
+
+.product-details-image {
+    max-height: 340px;
+    object-fit: cover;
+    width: 250%;
+}
+
+.edit-image {
+    max-height: 290px;
+    object-fit: cover;
+    width: 300%;
+}
+

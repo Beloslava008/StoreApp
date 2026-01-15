@@ -1,0 +1,44 @@
+﻿@model StoreApp.Models.Product
+
+@{
+    ViewData["Title"] = "Изтриване на продукт";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-danger">
+            <div class="card-body text-center">
+
+                <h3 class="text-danger mb-3">⚠ Потвърждение за изтриване</h3>
+
+                <p class="mb-4">
+                    Сигурни ли сте, че искате да изтриете този продукт?
+                </p>
+
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <img src="@Model.ImageUrl"
+                         class="img-fluid rounded mb-3 delete-image"
+                         alt="@Model.Name" />
+                }
+
+                <h5>@Model.Name</h5>
+                <p class="fw-bold">@Model.Price лв.</p>
+
+                <form asp-action="Delete" method="post" class="mt-4">
+                    <input type="hidden" asp-for="Id" />
+
+                    <button type="submit" class="btn btn-danger">
+                        🗑 Изтрий
+                    </button>
+
+                    <a asp-action="Index"
+                       class="btn btn-secondary ms-2">
+                        Отказ
+                    </a>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
