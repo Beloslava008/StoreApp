@@ -17,11 +17,22 @@ namespace StoreApp.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string search)
         {
-            var products = _context.Products.ToList();
-            return View(products);
+            var products = _context.Products.AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                products = products.Where(p =>
+                    p.Name.Contains(search) ||
+                    p.Description.Contains(search));
+            }
+
+            ViewData["Search"] = search;
+
+            return View(products.ToList());
         }
+
 
         public IActionResult Privacy()
         {

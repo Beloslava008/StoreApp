@@ -1,4 +1,7 @@
+wwwroot\css\site.css
 wwwroot\favicon.ico
+wwwroot\images\7a9142af-72f5-4f9b-a449-623f1bd85379.webp
+wwwroot\images\7f7b1613-0079-4c77-aeb5-2e8dfbc1626e.jpg
 wwwroot\images\d4dd1ed9-6382-4da1-96e3-6e1bc3e54573.png
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
@@ -58,4 +61,3 @@ wwwroot\lib\jquery\dist\jquery.js
 wwwroot\lib\jquery\dist\jquery.min.js
 wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
-wwwroot\css\site.css

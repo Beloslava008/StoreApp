@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StoreApp.Data;
 using StoreApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace StoreApp.Controllers
 {
@@ -22,9 +23,20 @@ namespace StoreApp.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string search)
         {
-            return View(await _context.Products.ToListAsync());
+            var products = _context.Products.AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                products = products.Where(p =>
+                    p.Name.Contains(search) ||
+                    p.Description.Contains(search));
+            }
+
+            ViewData["Search"] = search;
+
+            return View(products.ToList());
         }
 
         // GET: Products/Details/5
@@ -46,6 +58,7 @@ namespace StoreApp.Controllers
         }
 
         // GET: Products/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -53,6 +66,7 @@ namespace StoreApp.Controllers
 
         // POST: Products/Create     
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Product product)
         {
@@ -79,6 +93,7 @@ namespace StoreApp.Controllers
         }
 
         // GET: Products/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -95,39 +110,50 @@ namespace StoreApp.Controllers
         }
 
         // POST: Products/Edit/5
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,Description,ImageUrl")] Product product)
+        public async Task<IActionResult> Edit(int id, Product product)
         {
             if (id != product.Id)
-            {
                 return NotFound();
-            }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(product);
+
+            var productFromDb = await _context.Products.FindAsync(id);
+            if (productFromDb == null)
+                return NotFound();
+
+            // Обновяваме текстовите полета
+            productFromDb.Name = product.Name;
+            productFromDb.Price = product.Price;
+            productFromDb.Description = product.Description;
+
+            // АКО има нова снимка
+            if (product.ImageFile != null)
             {
-                try
-                {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductExists(product.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                string uploadsFolder = Path.Combine(_env.WebRootPath, "images");
+                Directory.CreateDirectory(uploadsFolder);
+
+                string fileName = Guid.NewGuid() + Path.GetExtension(product.ImageFile.FileName);
+                string filePath = Path.Combine(uploadsFolder, fileName);
+
+                using var stream = new FileStream(filePath, FileMode.Create);
+                await product.ImageFile.CopyToAsync(stream);
+
+                productFromDb.ImageUrl = "/images/" + fileName;
             }
-            return View(product);
+            // АКО няма нова снимка → НЕ пипаме ImageUrl
+
+            _context.Update(productFromDb);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Products/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
