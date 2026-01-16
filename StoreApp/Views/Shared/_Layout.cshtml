@@ -37,14 +37,7 @@
                                asp-controller="Home" asp-action="Index">
                                 Начало
                             </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link nav-clean"
-                               asp-controller="Products" asp-action="Index">
-                                Продукти
-                            </a>
-                        </li>
+                        </li>                        
 
                         @if (User.IsInRole("Admin"))
                         {
@@ -77,7 +70,7 @@
     </main>
 
     <!-- FOOTER -->
-    <footer class="border-top bg-white py-4 mt-auto">
+    <footer class="border-top bg-white py-3 mt-auto">
         <div class="container text-center text-muted">
             &copy; 2026 - StoreApp
         </div>
